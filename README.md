@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # ProCred™ — Verified Skills. Trusted Credits.
 
 A full-stack MERN app for verifying student achievements and connecting them with recruiters.
@@ -117,3 +118,7 @@ Vite automatically proxies `/api/*` requests to the backend — no extra config 
 | 10 | Page redirection broken after login/logout | Fixed auth guards in `App.tsx` |
 | 11 | No MongoDB setup guidance | Added `.env` instructions, better `db.js` error messages |
 | 12 | Old duplicate folders in zip | Clean zip with only `backend/` and `frontend/` at root |
+=======
+# ProCred-Professional-Credit-System
+ProCred — A credential verification platform connecting students, recruiters, and universities.
+>>>>>>> d474b253053d78a26857ffb34623204fdc09fd83
