@@ -777,13 +777,13 @@ export function StudentDashboard({ onPageChange }: Props) {
                 {liveJobs.filter((j: any) => j.type === 'Bounty').map((job: any) => {
                   const hasApplied = appliedJobs.has(job._id);
                   return (
-                    <Card key={job._id} className="border-2 border-purple-100 shadow-md bg-white hover:shadow-lg transition-all relative overflow-hidden">
+                    <Card key={job._id} className={`border-2 shadow-md bg-white hover:shadow-lg transition-all relative overflow-hidden ${job.isFull ? 'border-slate-200 opacity-75' : 'border-purple-100'}`}>
                       <div className="absolute top-0 right-0 bg-purple-600 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">BOUNTY</div>
                       <CardContent className="p-5 pt-7">
                         <h3 className="font-extrabold text-slate-900 text-lg mb-1">{job.title}</h3>
                         <p className="font-semibold text-purple-700 text-sm mb-3">@ {job.company}</p>
                         
-                        <div className="flex gap-4 mb-4">
+                        <div className="flex gap-3 mb-4">
                           <div className="bg-emerald-50 rounded-lg p-2 flex-1 text-center border border-emerald-100">
                             <p className="text-xs text-emerald-600 font-bold uppercase">Reward</p>
                             <p className="text-lg font-black text-emerald-700">{job.salary || 'Varies'}</p>
@@ -792,19 +792,31 @@ export function StudentDashboard({ onPageChange }: Props) {
                             <p className="text-xs text-orange-600 font-bold uppercase">Points</p>
                             <p className="text-lg font-black text-orange-700">+150</p>
                           </div>
+                          <div className="bg-purple-50 rounded-lg p-2 flex-1 text-center border border-purple-100">
+                            <p className="text-xs text-purple-600 font-bold uppercase">Winners</p>
+                            <p className="text-lg font-black text-purple-700">{job.openingsLeft ?? job.openings} left</p>
+                          </div>
                         </div>
+
+                        {job.isFull && (
+                          <div className="bg-red-50 border border-red-200 rounded-lg px-3 py-2 mb-3 text-xs text-red-700 font-semibold text-center">
+                            🔒 All winner slots filled — this bounty is closed
+                          </div>
+                        )}
                         
                         <p className="text-sm text-slate-600 line-clamp-2 mb-4">{job.description}</p>
                         
-                        <Button className="w-full bg-purple-600 hover:bg-purple-700" disabled={hasApplied} onClick={async () => {
-                           if (hasApplied) return;
+                        <Button className={`w-full ${job.isFull ? 'bg-slate-400 cursor-not-allowed' : 'bg-purple-600 hover:bg-purple-700'}`} 
+                          disabled={hasApplied || job.isFull} 
+                          onClick={async () => {
+                           if (hasApplied || job.isFull) return;
                            try {
                              await jobsAPI.applyToJob(job._id, {});
                              setAppliedJobs(prev => new Set([...prev, job._id]));
-                             alert("Applied to Bounty!");
+                             setNotifications(p => [{ id: Date.now(), text: `✅ Applied to bounty: ${job.title}!`, time: 'just now', read: false }, ...p]);
                            } catch (e: any) { alert(e.response?.data?.message || 'Failed to apply.'); }
                         }}>
-                          {hasApplied ? 'Applied ✓' : 'Claim Bounty →'}
+                          {hasApplied ? 'Applied ✓' : job.isFull ? 'Bounty Full' : `Claim Bounty → (${job.openingsLeft ?? job.openings} slots left)`}
                         </Button>
                       </CardContent>
                     </Card>

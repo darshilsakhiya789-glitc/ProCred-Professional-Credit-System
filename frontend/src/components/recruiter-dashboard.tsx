@@ -621,10 +621,13 @@ export function RecruiterDashboard({ onPageChange }: Props) {
             <Card className="border-0 shadow-lg bg-white">
               <CardHeader><CardTitle className="flex items-center gap-2 text-lg"><Cpu className="h-5 w-5 text-purple-600" />AI Resume & Profile Scanner</CardTitle></CardHeader>
               <CardContent className="space-y-4">
-                <div className="bg-purple-50 border border-purple-200 rounded-xl p-4 text-sm text-purple-800">🤖 Paste your job description. AI ranks all {students.length} candidate profiles by keyword match % + ProCred score combined.</div>
+                <div className="bg-purple-50 border border-purple-200 rounded-xl p-4 text-sm text-purple-800">
+                  🤖 Paste your job description below. AI ranks all <strong>{students.length}</strong> candidate profiles by keyword match % + ProCred score combined.
+                  {students.length === 0 && <span className="block mt-2 text-orange-700 font-semibold">⚠️ No candidates loaded yet. <button onClick={() => fetchStudents()} className="underline">Click here to load candidates</button> first.</span>}
+                </div>
                 <Textarea placeholder="Paste your full job description here…" value={scanJD} onChange={(e) => setScanJD(e.target.value)} rows={6} />
-                <Button onClick={handleScan} disabled={scanning} className="bg-purple-600 hover:bg-purple-700 h-11 px-8">
-                  <Cpu className="h-4 w-4 mr-2" />{scanning ? 'Scanning…' : 'Scan & Rank Candidates'}
+                <Button onClick={handleScan} disabled={scanning || students.length === 0} className="bg-purple-600 hover:bg-purple-700 h-11 px-8 disabled:opacity-50">
+                  <Cpu className="h-4 w-4 mr-2" />{scanning ? 'Scanning…' : `Scan & Rank ${students.length} Candidates`}
                 </Button>
               </CardContent>
             </Card>

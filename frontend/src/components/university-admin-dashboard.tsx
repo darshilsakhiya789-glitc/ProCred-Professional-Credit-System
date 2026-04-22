@@ -97,7 +97,9 @@ export function UniversityAdminDashboard({ onPageChange }: Props) {
       } catch {}
     };
     fetchStats();
-  }, []);
+    // Also load students on mount so Total Students count shows immediately
+    fetchStudents();
+  }, [fetchStudents]);
 
   const handleVerify = async (id: string, status: 'verified' | 'rejected', reason?: string) => {
     setVerifyLoading(id);
